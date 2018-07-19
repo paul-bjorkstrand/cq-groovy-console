@@ -28,10 +28,10 @@ class RunScriptResponse {
         new RunScriptResponse(script, data, resultString, output, "", runningTime)
     }
 
-    static RunScriptResponse fromException(String script, Throwable throwable) {
+    static RunScriptResponse fromException(String script, String output, Throwable throwable) {
         def exceptionStackTrace = ExceptionUtils.getStackTrace(throwable)
 
-        new RunScriptResponse(script, "", "", "", exceptionStackTrace, "")
+        new RunScriptResponse(script, "", "", output, exceptionStackTrace, "")
     }
 
     static RunScriptResponse fromAuditRecordNode(Node node) {
@@ -40,14 +40,14 @@ class RunScriptResponse {
         def script = properties.get(PROPERTY_SCRIPT, "")
         def data = properties.get(PROPERTY_DATA, "")
         def exceptionStackTrace = properties.get(PROPERTY_EXCEPTION_STACK_TRACE, "")
+        def output = properties.get(AuditRecord.PROPERTY_OUTPUT, "")
 
         def response
 
         if (exceptionStackTrace) {
-            response = new RunScriptResponse(script, data, "", "", exceptionStackTrace, "")
+            response = new RunScriptResponse(script, data, "", output, exceptionStackTrace, "")
         } else {
             def result = properties.get(AuditRecord.PROPERTY_RESULT, "")
-            def output = properties.get(AuditRecord.PROPERTY_OUTPUT, "")
             def runningTime = properties.get(AuditRecord.PROPERTY_RUNNING_TIME, "")
 
             response = new RunScriptResponse(script, data, result, output, "", runningTime)
